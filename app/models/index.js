@@ -16,4 +16,16 @@ const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
 
 const db = {}
 
+db.Sequelize = Sequelize
+db.sequelize = sequelize
+
+db.tutorials = require('./tutorial.model')(sequelize, Sequelize)
+db.comments = require('./comment.model')(sequelize, Sequelize)
+
+db.tutorials.hasMany(db.comments, { as: 'comments' })
+db.comments.belongsTo(db.tutorials, {
+  foreignKey: 'tutorial_id',
+  as: 'tutorial'
+})
+
 module.exports = db
